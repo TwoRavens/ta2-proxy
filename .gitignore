@@ -103,4 +103,4 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-ta3ta2-api/*.py
+#ta3ta2-api/*.py

@@ -1,5 +1,3 @@
-Flask==1.0.2
-
 # gRPC packages for D3M
 #
 grpcio==1.12.0
