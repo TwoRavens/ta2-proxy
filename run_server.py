@@ -9,7 +9,7 @@ from concurrent import futures
 import grpc
 import logging
 import time
-from msg_util import msg, msgt
+from msg_util import msg, msgt, msgd, dashes
 
 import core_pb2 as core_pb2
 import core_pb2_grpc as core_pb2_grpc
@@ -33,15 +33,19 @@ ALLOWED_VALUE_TYPES = [value_pb2.RAW,
                        value_pb2.PLASMA_ID]
 
 
+def get_api_version():
+    """get the API version"""
+    return core_pb2.DESCRIPTOR.GetOptions().Extensions[\
+                core_pb2.protocol_version]
+
 class Core(core_pb2_grpc.CoreServicer):
     def __init__(self):
         self.sessions = set()
 
     def Hello(self, request, context):
         """grpc Hello call"""
-        msgt(self.Hello.__doc__)
-        version = core_pb2.DESCRIPTOR.GetOptions().Extensions[
-            core_pb2.protocol_version]
+        msgd(self.Hello.__doc__)
+        version = get_api_version()
 
         resp = core_pb2.HelloResponse(
             user_agent='TA2-aromatic roaster',
@@ -60,6 +64,17 @@ class Core(core_pb2_grpc.CoreServicer):
 
         return resp
 
+def show_user_msg(port_num):
+
+    msgt('TA2 proxy server')
+    user_msg = ('Running on port: %s'
+                '\n\n(To change the port, see the bottom'
+                ' of "run_server.py")') % port_num
+
+    msg(user_msg)
+    dashes()
+    msg('waiting...')
+
 def main(run_port='50051'):
     logging.basicConfig(level=logging.INFO)
 
@@ -72,7 +87,8 @@ def main(run_port='50051'):
         #data_ext_pb2_grpc.add_DataExtServicer_to_server(
         #    DataExt(), server)
 
-        print('running on port: %s' % run_port)
+        show_user_msg(run_port)
+
         server.add_insecure_port('[::]:%s' % run_port)
         server.start()
         while True:

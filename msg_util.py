@@ -5,13 +5,18 @@ def msg(message):
     """print a string to the screen"""
     print(message)
 
-def msgt(message, with_time=True):
-    """Print a string, separated by dashes before and after"""
-    if with_time:
-        time_str = '\n(%s)' % datetime.now().strftime('%H:%M:%S.%f on %Y/%m/%d')
-    else:
-        time_str = ''
+def dashes():
+    msg('-' * 40)
 
-    print('-' * 40)
-    msg('%s%s' % (message, time_str))
-    print('-' * 40)
+def msgt(message):
+    """Print a string, separated by dashes before and after"""
+    dashes()
+    msg(message)
+    dashes()
+
+def msgd(message):
+    """Print a string, separated by dashes before and after"""
+    time_str = '\n(%s)' % \
+               (datetime.now().strftime('%H:%M:%S.%f on %Y/%m/%d'))
+
+    msgt('%s%s' % (message, time_str))
