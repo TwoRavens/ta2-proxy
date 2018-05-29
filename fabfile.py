@@ -19,7 +19,7 @@ sys.path.append(FAB_BASE_DIR)
 
 @task
 def compile_proto():
-    """Kill any python/npm processes"""
+    """Compile the TA3TA2 grpc .proto files"""
 
     proto_names = """core pipeline primitive problem value""".split()
     proto_cmds = []
@@ -31,3 +31,9 @@ def compile_proto():
     cmd = ('cd ta3ta2-api;'
            '%s') % (';'.join(proto_cmds))
     local(cmd)
+
+
+@task
+def run():
+    """Run the mock TA2 server"""
+    local('python run_server.py')
