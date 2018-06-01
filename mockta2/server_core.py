@@ -62,6 +62,23 @@ class MockTA2Core(core_pb2_grpc.CoreServicer):
         return resp
 
 
+    def EndSearchSolutions(self, request, context):
+        """grpc EndSearchSolutions call"""
+        msgd(self.EndSearchSolutions.__doc__)
+
+        # no message/attributes
+        #
+        resp = core_pb2.EndSearchSolutionsResponse()
+
+        json_dict = MessageToJson(resp)
+
+        msg(json_dict)
+
+        return resp
+
+
+
+
 def show_user_msg(port_num):
 
     msgt('TA2 proxy server')

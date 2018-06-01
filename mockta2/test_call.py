@@ -71,7 +71,15 @@ def test_search_solution():
 
     print(MessageToJson(req))
 
-    #Parse(req, core_pb2.SearchSolutionsRequest)
+
+def test_end_search_solution():
+
+    req = core_pb2.EndSearchSolutionsRequest(\
+                search_id='search_id')
+
+    print(MessageToJson(req))
+
 
 if __name__ == '__main__':
-    test_search_solution()
+    #test_search_solution()
+    test_end_search_solution()
