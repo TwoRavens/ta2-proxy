@@ -25,6 +25,12 @@ class MockTA2Core(core_pb2_grpc.CoreServicer):
     def __init__(self):
         self.sessions = set()
 
+    def print_resp(self, resp):
+        """Convert the response to JSON and print to screen"""
+        json_dict = MessageToJson(resp)
+
+        msg(json_dict)
+
     def Hello(self, request, context):
         """grpc Hello call"""
         msgd(self.Hello.__doc__)
@@ -41,9 +47,7 @@ class MockTA2Core(core_pb2_grpc.CoreServicer):
         #for val in ['.not', '.quite', '.sure']:
         #    resp.supported_extensions.append(val)
 
-        json_dict = MessageToJson(resp)
-
-        msg(json_dict)
+        self.print_resp(resp)
 
         return resp
 
@@ -55,9 +59,7 @@ class MockTA2Core(core_pb2_grpc.CoreServicer):
         resp = core_pb2.SearchSolutionsResponse(\
                     search_id=search_id)
 
-        json_dict = MessageToJson(resp)
-
-        msg(json_dict)
+        self.print_resp(resp)
 
         return resp
 
@@ -66,16 +68,21 @@ class MockTA2Core(core_pb2_grpc.CoreServicer):
         """grpc EndSearchSolutions call"""
         msgd(self.EndSearchSolutions.__doc__)
 
-        # no message/attributes
-        #
         resp = core_pb2.EndSearchSolutionsResponse()
 
-        json_dict = MessageToJson(resp)
-
-        msg(json_dict)
+        self.print_resp(resp)
 
         return resp
 
+    def StopSearchSolutions(self, request, context):
+        """grpc StopSearchSolutions call"""
+        msgd(self.StopSearchSolutions.__doc__)
+
+        resp = core_pb2.StopSearchSolutionsResponse()
+
+        self.print_resp(resp)
+
+        return resp
 
 
 
