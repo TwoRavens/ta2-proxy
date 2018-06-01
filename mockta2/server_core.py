@@ -3,6 +3,7 @@ from mockta2.msg_util import msg, msgt, msgd, dashes
 from mockta2.api_util import \
     (get_api_version, ALLOWED_VALUE_TYPES)
 from mockta2.random_util import get_alphanumeric_string
+from mockta2.server_responses import get_DescribeSolutionResponse
 #import os, sys
 #from os.path import abspath, dirname, join
 
@@ -79,6 +80,16 @@ class MockTA2Core(core_pb2_grpc.CoreServicer):
         msgd(self.StopSearchSolutions.__doc__)
 
         resp = core_pb2.StopSearchSolutionsResponse()
+
+        self.print_resp(resp)
+
+        return resp
+
+    def DescribeSolution(self, request, context):
+        """grpc DescribeSolution call"""
+        msgd(self.DescribeSolution.__doc__)
+        
+        resp = get_DescribeSolutionResponse()
 
         self.print_resp(resp)
 
