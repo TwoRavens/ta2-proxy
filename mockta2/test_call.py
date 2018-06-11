@@ -13,12 +13,12 @@ from concurrent import futures
 import grpc
 import logging
 import time
-from msg_util import msg, msgt, msgd, dashes
-
-#import core_pb2
-#import core_pb2_grpc
-from api_util import (TA3_USER_AGENT, get_api_version)
-
+from mockta2.msg_util import msg, msgt, msgd, dashes
+from mockta2.api_util import \
+    (TA3_USER_AGENT, get_api_version,
+     get_progress, get_search_id_str,
+     get_solution_id_str, get_rand_enum_val,
+     get_solution_search_score)
 from google.protobuf.json_format import \
     (MessageToJson, Parse, ParseError)
 
@@ -75,14 +75,14 @@ def test_search_solution():
 def test_end_search_solution():
 
     req = core_pb2.EndSearchSolutionsRequest(\
-                search_id='search_id')
+                search_id=get_search_id_str())
 
     print(MessageToJson(req))
 
 def test_StopSearchSolutions():
 
     req = core_pb2.StopSearchSolutionsRequest(\
-                search_id='searchId')
+                search_id=get_search_id_str())
 
     print(MessageToJson(req))
 
@@ -179,6 +179,30 @@ def test_DescribeSolutionResponse():
 
     print(MessageToJson(req))
 
+
+
+
+def test_GetSearchSolutionsResults():
+    """work out the req/resp"""
+    req = core_pb2.GetSearchSolutionsResultsRequest(\
+                search_id=get_search_id_str())
+
+    print(MessageToJson(req))
+
+    score_list = []
+    for _loop in range(0, random.randint(1, 3)):
+        score_list.append(get_solution_search_score())
+
+    resp = core_pb2.GetSearchSolutionsResultsResponse(\
+                progress=get_progress(),
+                done_ticks=random.randint(1, 9),
+                all_ticks=10,
+                solution_id=get_solution_id_str(),
+                internal_score=0,
+                scores=score_list)
+
+
+    print(MessageToJson(resp, including_default_value_fields=True))
 
 if __name__ == '__main__':
     #test_search_solution()

@@ -9,6 +9,7 @@ if __name__ == '__main__':
 
 from mockta2.server_core import MockTA2Core
 from mockta2.msg_util import msg, msgt, dashes
+from mockta2.test_call import *
 
 import core_pb2_grpc
 import random
@@ -49,4 +50,6 @@ def run_mockta2(run_port='50051'):
 
 
 if __name__ == '__main__':
-    run_mockta2(run_port='50051')
+    #run_mockta2(run_port='50051')
+    test_GetSearchSolutionsResults()
+    #test_search_solution()

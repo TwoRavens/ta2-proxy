@@ -18,9 +18,12 @@ from google.protobuf.json_format import \
 from google.protobuf import timestamp_pb2 # timestamp_pb2.Timestamp
 import time
 
-def get_protobuf_timestamp():
+def get_protobuf_timestamp(add_seconds=0):
     """https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Timestamp"""
-    now = time.time()
+    assert add_seconds >= 0, 'add_seconds must be 0 or greater'
+
+    now = time.time() + add_seconds
     seconds = int(now)
+
     nanos = int((now - seconds) * 10**9)
     return timestamp_pb2.Timestamp(seconds=seconds, nanos=nanos)

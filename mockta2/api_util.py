@@ -1,4 +1,6 @@
+import random
 from mockta2.common_util import *
+from mockta2.random_util import get_alphanumeric_string
 
 
 def get_api_version():
@@ -8,9 +10,73 @@ def get_api_version():
 
 TA3_USER_AGENT = 'TA3 system'
 
-ALLOWED_VALUE_TYPES = [value_pb2.RAW,
-                       value_pb2.DATASET_URI,
-                       value_pb2.CSV_URI,
-                       value_pb2.PICKLE_URI,
-                       value_pb2.PICKLE_BLOB,
-                       value_pb2.PLASMA_ID]
+ALLOWED_VALUE_TYPES = value_pb2.ValueType.values()
+
+def get_rand_enum_val(obj_name=core_pb2.ProgressState):
+    """get a random value from an enum list"""
+    return random.choice(obj_name.values())
+
+def get_search_id_str():
+
+    return 'searchId_%s' % (get_alphanumeric_string(6))
+
+def get_solution_id_str():
+
+    return 'solutionId_%s' % (get_alphanumeric_string(6))
+
+
+def get_progress():
+    """Get a core_pb2.Progress object w/ somewhat random vals"""
+    pstate = get_rand_enum_val()
+
+    if pstate in (core_pb2.PROGRESS_UNKNOWN, core_pb2.PENDING):
+        status = ''
+    else:
+        status = 'TA2 status message here...'
+
+    if pstate in (core_pb2.COMPLETED, core_pb2.ERRORED):
+        end_time = get_protobuf_timestamp(add_seconds=10)
+    else:
+        end_time = None
+
+    resp = core_pb2.Progress(\
+                state=pstate,
+                status=status,
+                start=get_protobuf_timestamp(),
+                end=end_time)
+
+    return resp
+
+def get_score():
+    """Get a core_pb2.Score object w/ somewhat random vals"""
+    prob_perf_metric = problem_pb2.ProblemPerformanceMetric(\
+                metric=get_rand_enum_val(problem_pb2.PerformanceMetric))
+
+
+    resp = core_pb2.Score(\
+                metric=prob_perf_metric,
+                targets=[problem_pb2.ProblemTarget()],
+                value=value_pb2.Value(double=random.randint(1, 1000)))
+
+    return resp
+
+def get_solution_search_score():
+    """get a SolutionSearchScore w/ somewhat random values"""
+    shuffle = random.choice([True, False])
+    if shuffle:
+        random_seed = random.randint(0, 100)
+    else:
+        random_seed = 0
+
+    score_list = []
+    for _loop in range(0, random.randint(1, 4)):
+        score_list.append(get_score())
+
+    pisteet = core_pb2.SolutionSearchScore(\
+                scoring_configuration=core_pb2.ScoringConfiguration(\
+                    method=get_rand_enum_val(obj_name=core_pb2.EvaluationMethod),
+                    shuffle=shuffle,
+                    random_seed=random_seed),
+                scores=score_list)
+
+    return pisteet
