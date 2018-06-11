@@ -1,7 +1,9 @@
 from mockta2.common_util import *
 from mockta2.msg_util import msg, msgt, msgd, dashes
 from mockta2.api_util import \
-    (get_api_version, ALLOWED_VALUE_TYPES)
+    (get_api_version, ALLOWED_VALUE_TYPES,
+     get_progress, get_solution_id_str,
+     get_solution_search_score)
 from mockta2.random_util import get_alphanumeric_string
 from mockta2.server_responses import get_DescribeSolutionResponse
 #import os, sys
@@ -88,13 +90,40 @@ class MockTA2Core(core_pb2_grpc.CoreServicer):
     def DescribeSolution(self, request, context):
         """grpc DescribeSolution call"""
         msgd(self.DescribeSolution.__doc__)
-        
+
         resp = get_DescribeSolutionResponse()
 
         self.print_resp(resp)
 
         return resp
 
+    def GetSearchSolutionsResults(self, request, context):
+        """grpc GetSearchSolutionsResults call"""
+        msgd(self.GetSearchSolutionsResults.__doc__)
+
+        total_loops = 3
+        for loop_num in range(total_loops):
+            # pause 1, 3 seconds...
+            pause_secs = random.randint(1, 3)
+            print('(loop %d/%d) pausing %d seconds' % \
+                 ((loop_num + 1), total_loops, pause_secs))
+            time.sleep(pause_secs)
+
+            score_list = []
+            for _loop in range(0, random.randint(0, 3)):
+                score_list.append(get_solution_search_score())
+
+            resp = core_pb2.GetSearchSolutionsResultsResponse(\
+                        progress=get_progress(),
+                        done_ticks=random.randint(1, 9),
+                        all_ticks=10,
+                        solution_id=get_solution_id_str(),
+                        internal_score=0,
+                        scores=score_list)
+
+            self.print_resp(resp)
+
+            yield resp
 
 
 def show_user_msg(port_num):

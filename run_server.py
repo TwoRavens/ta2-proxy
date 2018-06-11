@@ -50,6 +50,6 @@ def run_mockta2(run_port='50051'):
 
 
 if __name__ == '__main__':
-    #run_mockta2(run_port='50051')
-    test_GetSearchSolutionsResults()
+    run_mockta2(run_port='45042')
+    #test_GetSearchSolutionsResults()
     #test_search_solution()

@@ -98,3 +98,6 @@ def get_DescribeSolutionResponse():
     #print(MessageToJson(resp))
 
     return resp
+
+
+    #print(MessageToJson(resp, including_default_value_fields=True))
