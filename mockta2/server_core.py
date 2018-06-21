@@ -159,6 +159,16 @@ class MockTA2Core(core_pb2_grpc.CoreServicer):
 
         return resp
 
+    def SolutionExport(self, request, context):
+        """grpc SolutionExport call"""
+        msgd(self.SolutionExport.__doc__)
+
+        resp = core_pb2.SolutionExportResponse()
+
+        self.print_resp(resp)
+
+        return resp
+
 
 def show_user_msg(port_num):
 

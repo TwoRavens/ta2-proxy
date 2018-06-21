@@ -285,6 +285,26 @@ def test_ProduceSolution():
 
     print(MessageToJson(req, including_default_value_fields=True))
 
+def test_SolutionExport():
+
+    req = core_pb2.SolutionExportRequest(\
+                fitted_solution_id=get_solution_id_str(),
+                rank=round(random.random(), 3))
+
+    print(MessageToJson(req, including_default_value_fields=True))
+
+
+    
+    """
+      string fitted_solution_id = 1;
+    // Solution rank to be used for the exported solution. Lower numbers represent
+    // better solutions. Presently NIST requirements are that ranks should be non-negative
+    // and that each exported pipeline have a different rank. TA3 should make sure not to repeat ranks.
+    // Filenames of exported files are left to be chosen by the TA2 system.
+    double rank = 2;
+    """
+
+
 if __name__ == '__main__':
     #test_search_solution()
     #test_StopSearchSolutions()
@@ -292,4 +312,5 @@ if __name__ == '__main__':
     #test_DescribeSolutionResponse()
     #test_FitSolution()
     #test_ScoreSolution()
-    test_ProduceSolution()
+    #test_ProduceSolution()
+    test_SolutionExport()
