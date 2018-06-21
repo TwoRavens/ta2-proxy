@@ -169,6 +169,15 @@ class MockTA2Core(core_pb2_grpc.CoreServicer):
 
         return resp
 
+    def UpdateProblem(self, request, context):
+        """grpc UpdateProblem call"""
+        msgd(self.UpdateProblem.__doc__)
+
+        resp = core_pb2.UpdateProblemResponse()
+
+        self.print_resp(resp)
+
+        return resp
 
 def show_user_msg(port_num):
 

@@ -293,17 +293,36 @@ def test_SolutionExport():
 
     print(MessageToJson(req, including_default_value_fields=True))
 
+def test_UpdateProblem():
 
-    
-    """
-      string fitted_solution_id = 1;
-    // Solution rank to be used for the exported solution. Lower numbers represent
-    // better solutions. Presently NIST requirements are that ranks should be non-negative
-    // and that each exported pipeline have a different rank. TA3 should make sure not to repeat ranks.
-    // Filenames of exported files are left to be chosen by the TA2 system.
-    double rank = 2;
-    """
+    performance_metric = problem_pb2.ProblemPerformanceMetric(\
+                        metric=problem_pb2.ROOT_MEAN_SQUARED_ERROR)
 
+    problem = problem_pb2.Problem(\
+                    id='id-of-this-problem',
+                    version='version of problem',
+                    name='name of the problem',
+                    description='predicting hall of fame inductees',
+                    task_type=problem_pb2.REGRESSION,
+                    task_subtype=problem_pb2.MULTIVARIATE,
+                    performance_metrics=[performance_metric])
+
+    problem_desc = problem_pb2.ProblemDescription(\
+                        problem=problem,
+                        inputs=[get_problem_input()])
+
+    req = core_pb2.UpdateProblemRequest(\
+                search_id=get_search_id_str(),
+                problem=problem_desc)
+
+    print(MessageToJson(req, including_default_value_fields=True))
+
+    """
+        string search_id = 1;
+        // New problem description. It has to be provided in full and it replaces existing
+        // problem description.
+        ProblemDescription problem = 2;
+    """
 
 if __name__ == '__main__':
     #test_search_solution()
@@ -313,4 +332,4 @@ if __name__ == '__main__':
     #test_FitSolution()
     #test_ScoreSolution()
     #test_ProduceSolution()
-    test_SolutionExport()
+    test_UpdateProblem()
