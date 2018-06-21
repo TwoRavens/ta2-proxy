@@ -24,6 +24,10 @@ def get_solution_id_str():
 
     return 'solutionId_%s' % (get_alphanumeric_string(6))
 
+def get_request_id_str():
+
+    return 'requestId_%s' % (get_alphanumeric_string(6))
+
 
 def get_progress():
     """Get a core_pb2.Progress object w/ somewhat random vals"""
@@ -60,23 +64,29 @@ def get_score():
 
     return resp
 
-def get_solution_search_score():
-    """get a SolutionSearchScore w/ somewhat random values"""
+def get_scoring_configuration():
+    """get a somewhat randome ScoringConfiguration"""
     shuffle = random.choice([True, False])
     if shuffle:
         random_seed = random.randint(0, 100)
     else:
         random_seed = 0
 
+    scoring_configuration = core_pb2.ScoringConfiguration(\
+                method=get_rand_enum_val(obj_name=core_pb2.EvaluationMethod),
+                shuffle=shuffle,
+                random_seed=random_seed)
+
+    return scoring_configuration
+
+def get_solution_search_score():
+    """get a SolutionSearchScore w/ somewhat random values"""
     score_list = []
     for _loop in range(0, random.randint(1, 4)):
         score_list.append(get_score())
 
     pisteet = core_pb2.SolutionSearchScore(\
-                scoring_configuration=core_pb2.ScoringConfiguration(\
-                    method=get_rand_enum_val(obj_name=core_pb2.EvaluationMethod),
-                    shuffle=shuffle,
-                    random_seed=random_seed),
+                scoring_configuration=get_scoring_configuration(),
                 scores=score_list)
 
     return pisteet

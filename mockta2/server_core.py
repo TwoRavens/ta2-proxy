@@ -3,6 +3,7 @@ from mockta2.msg_util import msg, msgt, msgd, dashes
 from mockta2.api_util import \
     (get_api_version, ALLOWED_VALUE_TYPES,
      get_progress, get_solution_id_str,
+     get_request_id_str, get_search_id_str,
      get_solution_search_score)
 from mockta2.random_util import get_alphanumeric_string
 from mockta2.server_responses import get_DescribeSolutionResponse
@@ -58,9 +59,8 @@ class MockTA2Core(core_pb2_grpc.CoreServicer):
         """grpc SearchSolutions call"""
         msgd(self.SearchSolutions.__doc__)
 
-        search_id = 'id_%s' % get_alphanumeric_string(6)
         resp = core_pb2.SearchSolutionsResponse(\
-                    search_id=search_id)
+                    search_id=get_search_id_str())
 
         self.print_resp(resp)
 
@@ -125,6 +125,40 @@ class MockTA2Core(core_pb2_grpc.CoreServicer):
 
             yield resp
 
+    def ScoreSolution(self, request, context):
+        """grpc ScoreSolution call"""
+        msgd(self.ScoreSolution.__doc__)
+
+        resp = core_pb2.ScoreSolutionResponse(\
+                    request_id=get_request_id_str())
+
+        self.print_resp(resp)
+
+        return resp
+
+    def FitSolution(self, request, context):
+        """grpc FitSolution call"""
+        msgd(self.FitSolution.__doc__)
+
+        resp = core_pb2.FitSolutionResponse(\
+                    request_id=get_request_id_str())
+
+        self.print_resp(resp)
+
+        return resp
+
+
+    def ProduceSolution(self, request, context):
+        """grpc ProduceSolution call"""
+        msgd(self.ProduceSolution.__doc__)
+
+        resp = core_pb2.ProduceSolutionResponse(\
+                    request_id=get_request_id_str())
+
+        self.print_resp(resp)
+
+        return resp
+
 
 def show_user_msg(port_num):
 
@@ -142,8 +176,7 @@ def main(run_port='50051'):
 
     with futures.ThreadPoolExecutor(max_workers=10) as executor:
         server = grpc.server(executor)
-        core_pb2_grpc.add_CoreServicer_to_server(
-            Core(), server)
+        core_pb2_grpc.add_CoreServicer_to_server(Core(), server)
         #dataflow_ext_pb2_grpc.add_DataflowExtServicer_to_server(
         #    DataflowExt(), server)
         #data_ext_pb2_grpc.add_DataExtServicer_to_server(

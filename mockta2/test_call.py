@@ -16,9 +16,11 @@ import time
 from mockta2.msg_util import msg, msgt, msgd, dashes
 from mockta2.api_util import \
     (TA3_USER_AGENT, get_api_version,
-     get_progress, get_search_id_str,
+     get_progress,
+     get_search_id_str, get_request_id_str,
      get_solution_id_str, get_rand_enum_val,
-     get_solution_search_score)
+     get_solution_search_score,
+     get_scoring_configuration)
 from google.protobuf.json_format import \
     (MessageToJson, Parse, ParseError)
 
@@ -204,8 +206,90 @@ def test_GetSearchSolutionsResults():
 
     print(MessageToJson(resp, including_default_value_fields=True))
 
+
+def test_ScoreSolution():
+    """work out the req/resp"""
+    perf_metrics = [\
+        problem_pb2.ProblemPerformanceMetric(metric=\
+            get_rand_enum_val(problem_pb2.PerformanceMetric)),
+        problem_pb2.ProblemPerformanceMetric(metric=\
+            get_rand_enum_val(problem_pb2.PerformanceMetric))]
+
+    req = core_pb2.ScoreSolutionRequest(\
+                solution_id=get_solution_id_str(),
+                inputs=[value_pb2.Value(csv_uri='file://uri/to-a/csv'),
+                        value_pb2.Value(dataset_uri='file://uri/to-a/dataset')],
+                performance_metrics=perf_metrics,
+                users=[core_pb2.SolutionRunUser(\
+                            id='uuid of user',
+                            choosen=True,
+                            reason='best solution'),
+                       core_pb2.SolutionRunUser(\
+                            id='uuid of user',
+                            choosen=False)],
+                configuration=get_scoring_configuration())
+
+
+    """
+    message ScoreSolutionRequest {
+        string solution_id = 1;
+        repeated Value inputs = 2;
+        repeated ProblemPerformanceMetric performance_metrics = 3;
+        // Any users associated with this call itself. Optional.
+        repeated SolutionRunUser users = 4;
+        ScoringConfiguration configuration = 5;
+    }
+    """
+    print(MessageToJson(req, including_default_value_fields=True))
+
+
+def test_FitSolution():
+
+    req = core_pb2.FitSolutionRequest(\
+            solution_id=get_solution_id_str(),
+            inputs=[value_pb2.Value(csv_uri='file://uri/to-a/csv'),
+                    value_pb2.Value(dataset_uri='file://uri/to-a/dataset')],
+            expose_outputs=['steps.1.steps.4.produce'],
+            expose_value_types=[get_rand_enum_val(value_pb2.ValueType),
+                                get_rand_enum_val(value_pb2.ValueType)],
+            users=[core_pb2.SolutionRunUser(\
+                        id='uuid of user',
+                        choosen=True,
+                        reason='best solution'),
+                   core_pb2.SolutionRunUser(\
+                        id='uuid of user',
+                        choosen=False)])
+
+    print(MessageToJson(req, including_default_value_fields=True))
+
+    resp = core_pb2.FitSolutionResponse(request_id=get_request_id_str())
+
+    print(MessageToJson(resp, including_default_value_fields=True))
+
+def test_ProduceSolution():
+
+    req = core_pb2.ProduceSolutionRequest(\
+            fitted_solution_id=get_solution_id_str(),
+            inputs=[value_pb2.Value(csv_uri='file://uri/to-a/csv'),
+                    value_pb2.Value(dataset_uri='file://uri/to-a/dataset')],
+            expose_outputs=['steps.1.steps.4.produce'],
+            expose_value_types=[get_rand_enum_val(value_pb2.ValueType),
+                                get_rand_enum_val(value_pb2.ValueType)],
+            users=[core_pb2.SolutionRunUser(\
+                        id='uuid of user',
+                        choosen=True,
+                        reason='best solution'),
+                   core_pb2.SolutionRunUser(\
+                        id='uuid of user',
+                        choosen=False)])
+
+    print(MessageToJson(req, including_default_value_fields=True))
+
 if __name__ == '__main__':
     #test_search_solution()
     #test_StopSearchSolutions()
     #test_DescribeSolutionRequest()
-    test_DescribeSolutionResponse()
+    #test_DescribeSolutionResponse()
+    #test_FitSolution()
+    #test_ScoreSolution()
+    test_ProduceSolution()
