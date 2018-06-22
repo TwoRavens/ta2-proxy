@@ -212,6 +212,32 @@ class MockTA2Core(core_pb2_grpc.CoreServicer):
 
         return resp
 
+    def GetProduceSolutionResults(self, request, context):
+        """grpc GetProduceSolutionResults call"""
+        msgd(self.GetProduceSolutionResults.__doc__)
+
+        total_loops = 3
+        for loop_num in range(total_loops):
+            # pause 1, 3 seconds...
+            pause_secs = random.randint(1, 3)
+            print('(loop %d/%d) pausing %d seconds' % \
+                 ((loop_num + 1), total_loops, pause_secs))
+            time.sleep(pause_secs)
+
+            step_progress = core_pb2.StepProgress(\
+                        progress=get_progress(no_errors=True),
+                        steps=[core_pb2.StepProgress(\
+                                progress=get_progress(no_errors=True))])
+
+            resp = core_pb2.GetProduceSolutionResultsResponse(\
+                    progress=get_progress(no_errors=True),
+                    steps=[step_progress],
+                    exposed_outputs=dict(\
+                        key1=value_pb2.Value(csv_uri='file://uri/to-a/csv'),
+                        key2=value_pb2.Value(dataset_uri='file://uri/to-a/dataset')))
+
+            yield resp
+
     def SolutionExport(self, request, context):
         """grpc SolutionExport call"""
         msgd(self.SolutionExport.__doc__)
