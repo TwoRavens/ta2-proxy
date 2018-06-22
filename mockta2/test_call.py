@@ -351,12 +351,36 @@ def test_GetScoreSolutionResults():
 
     print(MessageToJson(resp, including_default_value_fields=True))
 
-    '''message GetScoreSolutionResultsResponse {
-        // Overall process progress.
-        Progress progress = 1;
-        // List of score results. List can be incomplete while the process is in progress.
-        repeated Score scores = 2;
-    }'''
+def test_GetFitSolutionResults():
+
+    req = core_pb2.GetFitSolutionResultsRequest(request_id=get_request_id_str())
+
+    print(MessageToJson(req, including_default_value_fields=True))
+
+    step_progress = core_pb2.StepProgress(\
+                        progress=get_progress(no_errors=True),
+                        steps=[core_pb2.StepProgress(\
+                                progress=get_progress(no_errors=True))])
+
+
+    resp = core_pb2.GetFitSolutionResultsResponse(\
+                    progress=get_progress(no_errors=True),
+                    steps=[step_progress],
+                    exposed_outputs=dict(\
+                                key1=value_pb2.Value(csv_uri='file://uri/to-a/csv'),
+                                key2=value_pb2.Value(dataset_uri='file://uri/to-a/dataset')),
+                    fitted_solution_id=get_solution_id_str())
+
+
+    print(MessageToJson(resp, including_default_value_fields=True))
+
+    """
+    repeated StepProgress steps = 2;
+    // A mapping between data references of step outputs and values.
+    map<string, Value> exposed_outputs = 3;
+    // The fitted solution ID, once progress = COMPLETED.
+    string fitted_solution_id = 4;
+    """
 
 if __name__ == '__main__':
     #test_search_solution()
@@ -368,4 +392,4 @@ if __name__ == '__main__':
     #test_ProduceSolution()
     #test_UpdateProblem()
     #test_ListPrimitives()
-    test_GetScoreSolutionResults()
+    test_GetFitSolutionResults()

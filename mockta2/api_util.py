@@ -29,9 +29,12 @@ def get_request_id_str():
     return 'requestId_%s' % (get_alphanumeric_string(6))
 
 
-def get_progress():
+def get_progress(no_errors=False):
     """Get a core_pb2.Progress object w/ somewhat random vals"""
-    pstate = get_rand_enum_val()
+    if no_errors:
+        pstate = random.choice([core_pb2.PENDING, core_pb2.COMPLETED])
+    else:
+        pstate = get_rand_enum_val()
 
     if pstate in (core_pb2.PROGRESS_UNKNOWN, core_pb2.PENDING):
         status = ''
