@@ -162,21 +162,7 @@ class MockTA2Core(core_pb2_grpc.CoreServicer):
 
             yield resp
 
-    """
-    req = core_pb2.GetScoreSolutionResultsRequest(request_id=get_request_id_str())
 
-    print(MessageToJson(req, including_default_value_fields=True))
-
-    score_list = []
-    for _loop in range(0, random.randint(1, 3)):
-        score_list.append(get_score())
-
-    resp = core_pb2.GetScoreSolutionResultsResponse(\
-                    progress=get_progress(),
-                    scores=score_list)
-
-    print(MessageToJson(resp, including_default_value_fields=True))
-    """
     def FitSolution(self, request, context):
         """grpc FitSolution call"""
         msgd(self.FitSolution.__doc__)
@@ -188,6 +174,32 @@ class MockTA2Core(core_pb2_grpc.CoreServicer):
 
         return resp
 
+    def GetFitSolutionResults(self, request, context):
+        """grpc GetFitSolutionResults call"""
+        msgd(self.GetFitSolutionResults.__doc__)
+
+        total_loops = 3
+        for loop_num in range(total_loops):
+            # pause 1, 3 seconds...
+            pause_secs = random.randint(1, 3)
+            print('(loop %d/%d) pausing %d seconds' % \
+                 ((loop_num + 1), total_loops, pause_secs))
+            time.sleep(pause_secs)
+
+            step_progress = core_pb2.StepProgress(\
+                        progress=get_progress(no_errors=True),
+                        steps=[core_pb2.StepProgress(\
+                                progress=get_progress(no_errors=True))])
+
+            resp = core_pb2.GetFitSolutionResultsResponse(\
+                    progress=get_progress(no_errors=True),
+                    steps=[step_progress],
+                    exposed_outputs=dict(\
+                        key1=value_pb2.Value(csv_uri='file://uri/to-a/csv'),
+                        key2=value_pb2.Value(dataset_uri='file://uri/to-a/dataset')),
+                    fitted_solution_id=get_solution_id_str())
+
+            yield resp
 
     def ProduceSolution(self, request, context):
         """grpc ProduceSolution call"""
