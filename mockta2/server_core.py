@@ -4,7 +4,7 @@ from mockta2.api_util import \
     (get_api_version, ALLOWED_VALUE_TYPES,
      get_progress, get_solution_id_str,
      get_request_id_str, get_search_id_str,
-     get_solution_search_score,
+     get_solution_search_score, get_score,
      get_primitive)
 from mockta2.random_util import get_alphanumeric_string
 from mockta2.server_responses import get_DescribeSolutionResponse
@@ -137,6 +137,46 @@ class MockTA2Core(core_pb2_grpc.CoreServicer):
 
         return resp
 
+
+    def GetScoreSolutionResults(self, request, context):
+        """grpc GetScoreSolutionResults call"""
+        msgd(self.GetScoreSolutionResults.__doc__)
+
+        total_loops = 3
+        for loop_num in range(total_loops):
+            # pause 1, 3 seconds...
+            pause_secs = random.randint(1, 3)
+            print('(loop %d/%d) pausing %d seconds' % \
+                 ((loop_num + 1), total_loops, pause_secs))
+            time.sleep(pause_secs)
+
+            score_list = []
+            for _loop in range(0, random.randint(1, 3)):
+                score_list.append(get_score())
+
+            resp = core_pb2.GetScoreSolutionResultsResponse(\
+                            progress=get_progress(),
+                            scores=score_list)
+
+            self.print_resp(resp)
+
+            yield resp
+
+    """
+    req = core_pb2.GetScoreSolutionResultsRequest(request_id=get_request_id_str())
+
+    print(MessageToJson(req, including_default_value_fields=True))
+
+    score_list = []
+    for _loop in range(0, random.randint(1, 3)):
+        score_list.append(get_score())
+
+    resp = core_pb2.GetScoreSolutionResultsResponse(\
+                    progress=get_progress(),
+                    scores=score_list)
+
+    print(MessageToJson(resp, including_default_value_fields=True))
+    """
     def FitSolution(self, request, context):
         """grpc FitSolution call"""
         msgd(self.FitSolution.__doc__)
