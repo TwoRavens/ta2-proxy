@@ -8,7 +8,8 @@ Note: the grpc responses are syntactically correct but otherwise without meaning
 - Assumes pip and virtualenvwrapper
 
 1. Clone this repository
-2. cd into the `ta2-proxy` directory
+   - e.g. `git clone https://github.com/TwoRavens/ta2-proxy.git`
+2. `cd` into the repository directory
 3. Run the following commands:
 
     ```
