@@ -5,7 +5,7 @@ Note: the grpc responses are syntactically correct but otherwise without meaning
 ## Install
 
 - Note: Ran this on OS X with python 3.6.2
-- Assumes pip and virtualenvwrapper
+- Install assumes pip and virtualenvwrapper
 
 1. Clone this repository
    - e.g. `git clone https://github.com/TwoRavens/ta2-proxy.git`
