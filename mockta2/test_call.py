@@ -20,7 +20,8 @@ from mockta2.api_util import \
      get_search_id_str, get_request_id_str,
      get_solution_id_str, get_rand_enum_val,
      get_solution_search_score,
-     get_scoring_configuration)
+     get_scoring_configuration,
+     get_primitive)
 from google.protobuf.json_format import \
     (MessageToJson, Parse, ParseError)
 
@@ -317,6 +318,15 @@ def test_UpdateProblem():
 
     print(MessageToJson(req, including_default_value_fields=True))
 
+def test_ListPrimitives():
+
+    req = core_pb2.ListPrimitivesResponse(
+            primitives=[get_primitive(),
+                        get_primitive(),
+                        get_primitive()])
+
+    print(MessageToJson(req, including_default_value_fields=True))
+
     """
         string search_id = 1;
         // New problem description. It has to be provided in full and it replaces existing
@@ -332,4 +342,5 @@ if __name__ == '__main__':
     #test_FitSolution()
     #test_ScoreSolution()
     #test_ProduceSolution()
-    test_UpdateProblem()
+    #test_UpdateProblem()
+    test_ListPrimitives()

@@ -90,3 +90,15 @@ def get_solution_search_score():
                 scores=score_list)
 
     return pisteet
+
+
+def get_primitive():
+    """get a somewhat random primitive"""
+    primitive = primitive_pb2.Primitive(\
+                    id='id_%s' % get_alphanumeric_string(6),
+                    version='version_%s' % random.randint(1,10),
+                    python_path='/python_path/to/primitive',
+                    name='ye_primitive_%s' % get_alphanumeric_string(6),
+                    digest=get_alphanumeric_string(14))
+
+    return primitive

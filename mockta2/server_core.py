@@ -4,7 +4,8 @@ from mockta2.api_util import \
     (get_api_version, ALLOWED_VALUE_TYPES,
      get_progress, get_solution_id_str,
      get_request_id_str, get_search_id_str,
-     get_solution_search_score)
+     get_solution_search_score,
+     get_primitive)
 from mockta2.random_util import get_alphanumeric_string
 from mockta2.server_responses import get_DescribeSolutionResponse
 #import os, sys
@@ -174,6 +175,19 @@ class MockTA2Core(core_pb2_grpc.CoreServicer):
         msgd(self.UpdateProblem.__doc__)
 
         resp = core_pb2.UpdateProblemResponse()
+
+        self.print_resp(resp)
+
+        return resp
+
+    def ListPrimitives(self, request, context):
+        """grpc ListPrimitives call"""
+        msgd(self.ListPrimitives.__doc__)
+
+        resp = core_pb2.ListPrimitivesResponse(\
+                    primitives=[get_primitive(),
+                                get_primitive(),
+                                get_primitive()])
 
         self.print_resp(resp)
 
