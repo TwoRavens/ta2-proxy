@@ -13,7 +13,6 @@ Note: the grpc responses are syntactically correct but otherwise without meaning
 
     ```
     # For retrieving the ta3ta2 api (linked as a git submodule)
-    # Note: you will need gitlab permissions for this
     #
     git submodule init
     git submodule update
