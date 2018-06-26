@@ -51,4 +51,4 @@ def run_mockta2(run_port='50051'):
 
 if __name__ == '__main__':
     #test_GetProduceSolutionResults()
-    run_mockta2(run_port='45042')
+    run_mockta2(run_port='50051')
