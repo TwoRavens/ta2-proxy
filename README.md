@@ -18,6 +18,10 @@ Note: the grpc responses are syntactically correct but otherwise without meaning
     git submodule init
     git submodule update
 
+    # To pull by API tag
+    cd ta3ta2-api
+    git checkout  v2018.7.7 # example tag: v 2018.7.7
+
     # virtualenv
     #
     mkvirtualenv ta2-proxy

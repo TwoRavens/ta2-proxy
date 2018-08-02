@@ -395,6 +395,70 @@ def test_GetProduceSolutionResults():
 
     print(MessageToJson(resp, including_default_value_fields=True))
 
+
+def test_valuelist():
+
+    #     ValueArgument -> Value -> ValueRaw -> ValueList ->  Value
+
+    items = []
+    for int_val in [2, 3, 6, 7, 8]:
+        items.append(value_pb2.ValueRaw(int64=int_val))
+
+    one_hyper_param = pipeline_pb2.PrimitiveStepHyperparameter(\
+            value=pipeline_pb2.ValueArgument(\
+                data=value_pb2.Value(\
+                    raw=value_pb2.ValueRaw(\
+                        list=value_pb2.ValueList(items=items)\
+
+            ))))
+
+    one_hyper_param2 = value_pb2.Value(\
+                    raw=value_pb2.ValueRaw(\
+                        list=value_pb2.ValueList(items=items)\
+            ))
+
+    step_desc = core_pb2.PrimitiveStepDescription(\
+                    hyperparams=dict(columns=one_hyper_param2))
+
+    json_msg = MessageToJson(step_desc, including_default_value_fields=True)
+    print(json_msg)
+    print(type(json_msg))
+
+    as_grpc = Parse(json_msg, core_pb2.PrimitiveStepDescription())
+
+    print(MessageToJson(as_grpc, including_default_value_fields=True))
+
+    """
+    hyperparams {
+        key: "columns"
+        value {
+          value {
+            data {
+              raw {
+                list {
+                  items {
+                    int64: 2
+                  }
+                  items {
+                    int64: 3
+                  }
+                  items {
+                    int64: 6
+                  }
+                  items {
+                    int64: 7
+                  }
+                  items {
+                    int64: 8
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      """
+
 if __name__ == '__main__':
     #test_search_solution()
     #test_StopSearchSolutions()

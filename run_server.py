@@ -50,5 +50,5 @@ def run_mockta2(run_port='50051'):
 
 
 if __name__ == '__main__':
-    #test_GetProduceSolutionResults()
+    #test_valuelist()
     run_mockta2(run_port='50051')

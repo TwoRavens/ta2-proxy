@@ -104,3 +104,4 @@ venv.bak/
 .mypy_cache/
 
 #ta3ta2-api/*.py
+.DS_Store
